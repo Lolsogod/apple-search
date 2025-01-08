@@ -9,33 +9,44 @@ import { searchItunes } from '@/actions/search'
 import { SearchSkeleton } from '@/components/search-skeleton'
 import { ItunesItem, MediaType, mediaTypeLabels } from '@/types/itunes'
 import ResultItem from '@/components/result-item'
+import CustomPagination from '@/components/custom-pagination'
+
+const ITEMS_PER_PAGE = 10
 
 export default function SearchPage() {
   const [query, setQuery] = useState('')
   const [mediaType, setMediaType] = useState<MediaType>('all')
   const [hasSearched, setHasSearched] = useState(false);
+  const [totalResults, setTotalResults] = useState(0)
+  const [currentPage, setCurrentPage] = useState(1)
   const [results, setResults] = useState<ItunesItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  async function handleSearch(e: React.FormEvent) {
-    e.preventDefault()
+  async function handleSearch(e?: React.FormEvent, page: number = 1) {
+    if (e) {
+      e.preventDefault()
+    }
+
     if (!query.trim()) return
 
-    setHasSearched(true);
     setIsLoading(true)
     setError(null)
 
     try {
-      const data = await searchItunes(query, mediaType)
+      const data = await searchItunes(query, mediaType, page, ITEMS_PER_PAGE)
       setResults(data.results)
+      setTotalResults(data.resultCount)
+      setCurrentPage(page)
     } catch {
       setError('Failed to fetch results. Please try again.')
       setResults([])
     } finally {
       setIsLoading(false)
+      setHasSearched(true)
     }
   }
+
 
   function renderError() {
     if (!error) {
@@ -71,9 +82,16 @@ export default function SearchPage() {
     }
 
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {results.map((item) => <ResultItem data={item} key={item.trackId || item.collectionId} />)}
-      </div>
+      <>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {results.map((item) => <ResultItem data={item} key={item.trackId || item.collectionId} />)}
+        </div>
+        <CustomPagination
+          handleSearch={handleSearch}
+          currentPage={currentPage}
+          totalPages={Math.ceil(totalResults / ITEMS_PER_PAGE)}
+        />
+      </>
     );
   }
 
