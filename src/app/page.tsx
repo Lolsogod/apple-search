@@ -71,18 +71,18 @@ export default function SearchPage() {
     }
 
     return (
-      <div className="grid gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {results.map((item) => <ResultItem data={item} key={item.trackId || item.collectionId} />)}
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto py-8 px-4">
-      <div className="max-w-2xl mx-auto space-y-8">
+    <div className="container mx-auto py-8 px-4 md:px-6 lg:px-8">
+      <div className="max-w-2xl mx-auto space-y-8 md:space-y-12 lg:space-y-16">
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold text-center">iTunes Search</h1>
-          <p className="text-muted-foreground text-center">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center">iTunes Search</h1>
+          <p className="text-sm md:text-base lg:text-lg text-muted-foreground text-center">
             Search for music, movies, podcasts, books, and more
           </p>
         </div>

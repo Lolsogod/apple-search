@@ -25,9 +25,8 @@ function getItemIcon(kind?: string) {
   }
 
 export default function ResultItem({data}: {data: ItunesItem}) {
-  console.log(data.kind)
     return (
-      <Card className='max-w-2xl'>
+      <Card>
         <CardContent className="p-4">
           <div className="flex gap-4">
             <Image
@@ -50,7 +49,7 @@ export default function ResultItem({data}: {data: ItunesItem}) {
                   {data.collectionName}
                 </p>
               )}
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-muted-foreground truncate">
                 {data.primaryGenreName}
               </p>
             </div>
