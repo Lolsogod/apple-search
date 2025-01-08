@@ -97,7 +97,7 @@ export default function SearchPage() {
 
   return (
     <div className="container mx-auto py-8 px-4 md:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto space-y-8 md:space-y-12 lg:space-y-16">
+      <div className="max-w-2xl mx-auto space-y-4 md:space-y-6 lg:space-y-8">
         <div className="space-y-2">
           <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-center">iTunes Search</h1>
           <p className="text-sm md:text-base lg:text-lg text-muted-foreground text-center">

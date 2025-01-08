@@ -5,22 +5,24 @@ import { Music, Disc, Podcast, Film, Book, BookAudio } from 'lucide-react'
 import type { ItunesItem } from '@/types/itunes'
 
 function getItemIcon(kind?: string) {
+  const iconClass = "h-4 w-4 min-h-4 min-w-4";
+
     switch (kind) {
       case 'song':
       case 'musicTrack':
-        return <Music className="h-4 w-4" />
+        return <Music className={iconClass}/>
       case 'album':
-        return <Disc className="h-4 w-4" />
+        return <Disc className={iconClass}/>
       case 'podcast':
-        return <Podcast className="h-4 w-4" />
+        return <Podcast className={iconClass}/>
       case 'feature-movie':
-        return <Film className="h-4 w-4" />
+        return <Film className={iconClass}/>
       case 'ebook':
-        return <Book className="h-4 w-4" />
+        return <Book className={iconClass}/>
       case 'audiobook':
-        return <BookAudio className="h-4 w-4"/>
+        return <BookAudio className={iconClass}/>
       default:
-        return <Music className="h-4 w-4" />
+        return <Music className={iconClass}/>
     }
   }
 
