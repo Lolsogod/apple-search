@@ -1,9 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-
-
-
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -40,8 +37,6 @@ export default function SearchPage() {
     }
   }
 
-
-
   function renderError() {
     if (!error) {
       return null
@@ -55,8 +50,6 @@ export default function SearchPage() {
       </Card>
     )
   }
-
-
 
   function renderSearchResults() {
     if (!hasSearched) {
@@ -79,7 +72,7 @@ export default function SearchPage() {
 
     return (
       <div className="grid gap-4">
-        {results.map((item) => <ResultItem data={item} key={item.trackId} />)}
+        {results.map((item) => <ResultItem data={item} key={item.trackId || item.collectionId} />)}
       </div>
     );
   }

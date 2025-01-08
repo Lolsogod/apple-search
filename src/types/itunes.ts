@@ -1,20 +1,3 @@
-export interface ItunesSearchResult {
-    resultCount: number
-    results: ItunesItem[]
-  }
-  
-  export interface ItunesItem {
-    trackId: number
-    artistName: string
-    trackName: string
-    artworkUrl100: string
-    collectionName?: string
-    primaryGenreName: string
-    trackViewUrl?: string
-    kind?: string
-    previewUrl?: string
-  }
-  
   export interface ItunesSearchResult {
     resultCount: number
     results: ItunesItem[]
@@ -22,13 +5,16 @@ export interface ItunesSearchResult {
   
   export interface ItunesItem {
     trackId: number
+    collectionId: number
     artistName: string
     trackName: string
     artworkUrl100: string
-    collectionName?: string
+    collectionName: string
     primaryGenreName: string
     trackViewUrl?: string
+    collectionViewUrl? : string
     kind?: string
+    wrapperType?: string
     previewUrl?: string
   }
   

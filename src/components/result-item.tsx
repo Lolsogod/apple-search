@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { Button } from './ui/button'
 import { Card, CardContent } from './ui/card'
-import { Music, Disc, Podcast, Film, Book, Bookmark } from 'lucide-react'
+import { Music, Disc, Podcast, Film, Book, BookAudio } from 'lucide-react'
 import type { ItunesItem } from '@/types/itunes'
 
 function getItemIcon(kind?: string) {
@@ -13,33 +13,34 @@ function getItemIcon(kind?: string) {
         return <Disc className="h-4 w-4" />
       case 'podcast':
         return <Podcast className="h-4 w-4" />
-      case 'movie':
+      case 'feature-movie':
         return <Film className="h-4 w-4" />
       case 'ebook':
         return <Book className="h-4 w-4" />
       case 'audiobook':
-        return <Bookmark className="h-4 w-4" />
+        return <BookAudio className="h-4 w-4"/>
       default:
         return <Music className="h-4 w-4" />
     }
   }
 
 export default function ResultItem({data}: {data: ItunesItem}) {
+  console.log(data.kind)
     return (
-      <Card key={data.trackId}>
+      <Card className='max-w-2xl'>
         <CardContent className="p-4">
           <div className="flex gap-4">
             <Image
               src={data.artworkUrl100}
-              alt={data.trackName}
+              alt={data.trackName || data.collectionName}
               width={64}
               height={64}
               className="rounded-md object-cover"
             />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
-                {getItemIcon(data.kind)}
-                <p className="font-medium truncate">{data.trackName}</p>
+                {getItemIcon(data.kind || data.wrapperType)}
+                <p className="font-medium truncate">{data.trackName || data.collectionName}</p>
               </div>
               <p className="text-sm text-muted-foreground truncate">
                 {data.artistName}
@@ -53,12 +54,12 @@ export default function ResultItem({data}: {data: ItunesItem}) {
                 {data.primaryGenreName}
               </p>
             </div>
-            {data.trackViewUrl && (
+            {(data.trackViewUrl || data.collectionViewUrl) && (
               <Button
                 variant="outline"
                 size="sm"
                 className="ml-auto"
-                onClick={() => window.open(data.trackViewUrl, '_blank')}
+                onClick={() => window.open(data.trackViewUrl || data.collectionViewUrl, '_blank')}
               >
                 View
               </Button>
