@@ -1,16 +1,19 @@
 'use server'
 
-import { ItunesSearchResult } from '../types/itunes'
+import { ItunesSearchResult, MediaType, mediaTypeEntities } from '../types/itunes'
 
-export async function searchItunes(query: string): Promise<ItunesSearchResult> {
+export async function searchItunes(query: string, mediaType: MediaType = 'all'): Promise<ItunesSearchResult> {
   if (!query) {
     return { resultCount: 0, results: [] }
   }
 
+  const entity = mediaTypeEntities[mediaType]
+  const entityParam = mediaType === 'all' ? '' : `&entity=${entity}`
+
   const response = await fetch(
     `https://itunes.apple.com/search?term=${encodeURIComponent(
       query
-    )}&limit=20&entity=song,album,podcast`
+    )}&limit=20${entityParam}`
   )
 
   if (!response.ok) {
