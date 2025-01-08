@@ -1,8 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import Image from 'next/image'
-import { Music, Disc, Podcast, Film, Book, Bookmark } from 'lucide-react'
+
+
 
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -11,10 +11,12 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { searchItunes } from '@/actions/search'
 import { SearchSkeleton } from '@/components/search-skeleton'
 import { ItunesItem, MediaType, mediaTypeLabels } from '@/types/itunes'
+import ResultItem from '@/components/result-item'
 
 export default function SearchPage() {
   const [query, setQuery] = useState('')
   const [mediaType, setMediaType] = useState<MediaType>('all')
+  const [hasSearched, setHasSearched] = useState(false);
   const [results, setResults] = useState<ItunesItem[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -23,6 +25,7 @@ export default function SearchPage() {
     e.preventDefault()
     if (!query.trim()) return
 
+    setHasSearched(true);
     setIsLoading(true)
     setError(null)
 
@@ -37,24 +40,48 @@ export default function SearchPage() {
     }
   }
 
-  function getItemIcon(kind?: string) {
-    switch (kind) {
-      case 'song':
-      case 'musicTrack':
-        return <Music className="h-4 w-4" />
-      case 'album':
-        return <Disc className="h-4 w-4" />
-      case 'podcast':
-        return <Podcast className="h-4 w-4" />
-      case 'movie':
-        return <Film className="h-4 w-4" />
-      case 'ebook':
-        return <Book className="h-4 w-4" />
-      case 'audiobook':
-        return <Bookmark className="h-4 w-4" />
-      default:
-        return <Music className="h-4 w-4" />
+
+
+  function renderError() {
+    if (!error) {
+      return null
     }
+
+    return (
+      <Card>
+        <CardContent className="p-4">
+          <p className="text-red-500">{error}</p>
+        </CardContent>
+      </Card>
+    )
+  }
+
+
+
+  function renderSearchResults() {
+    if (!hasSearched) {
+      return null;
+    }
+
+    if (isLoading) {
+      return <SearchSkeleton />;
+    }
+
+    if (results.length === 0) {
+      return (
+        <Card>
+          <CardContent className="p-4 text-center text-muted-foreground">
+            No results found for &quot;{query}&quot;
+          </CardContent>
+        </Card>
+      );
+    }
+
+    return (
+      <div className="grid gap-4">
+        {results.map((item) => <ResultItem data={item} key={item.trackId} />)}
+      </div>
+    );
   }
 
   return (
@@ -97,69 +124,10 @@ export default function SearchPage() {
           </div>
         </form>
 
-        {error && (
-          <Card>
-            <CardContent className="p-4">
-              <p className="text-red-500">{error}</p>
-            </CardContent>
-          </Card>
-        )}
+        {renderError()}
 
         <div className="space-y-4">
-          {isLoading ? (
-            <SearchSkeleton />
-          ) : results.length > 0 ? (
-            <div className="grid gap-4">
-              {results.map((item) => (
-                <Card key={item.trackId}>
-                  <CardContent className="p-4">
-                    <div className="flex gap-4">
-                      <Image
-                        src={item.artworkUrl100}
-                        alt={item.trackName}
-                        width={64}
-                        height={64}
-                        className="rounded-md object-cover"
-                      />
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          {getItemIcon(item.kind)}
-                          <p className="font-medium truncate">{item.trackName}</p>
-                        </div>
-                        <p className="text-sm text-muted-foreground truncate">
-                          {item.artistName}
-                        </p>
-                        {item.collectionName && (
-                          <p className="text-sm text-muted-foreground truncate">
-                            {item.collectionName}
-                          </p>
-                        )}
-                        <p className="text-sm text-muted-foreground">
-                          {item.primaryGenreName}
-                        </p>
-                      </div>
-                      {item.trackViewUrl && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="ml-auto"
-                          onClick={() => window.open(item.trackViewUrl, '_blank')}
-                        >
-                          View
-                        </Button>
-                      )}
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          ) : query && !isLoading ? (
-            <Card>
-              <CardContent className="p-4 text-center text-muted-foreground">
-                No results found for &quot;{query}&quot;
-              </CardContent>
-            </Card>
-          ) : null}
+          {renderSearchResults()}
         </div>
       </div>
     </div>
